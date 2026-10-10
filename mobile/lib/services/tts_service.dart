@@ -50,7 +50,7 @@ class TtsService {
   // Проверка, идёт ли озвучка
   static Future<bool> isSpeaking() async {
     final state = await _tts.isLanguageAvailable;
-    return state;
+    return state as bool;
   }
 
   // Озвучить и вызвать callback после завершения

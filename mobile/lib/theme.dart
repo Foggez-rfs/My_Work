@@ -33,14 +33,10 @@ class AppTheme {
     ),
     // Крупные кнопки (минимум 60px высота)
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButtonStyle(
-        minimumSize: WidgetStateProperty.all(const Size(double.infinity, 60)),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        textStyle: WidgetStateProperty.all(
-          const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 60),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
       ),
     ),
     // Поля ввода
@@ -98,14 +94,10 @@ class AppTheme {
       labelLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButtonStyle(
-        minimumSize: WidgetStateProperty.all(const Size(double.infinity, 60)),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        textStyle: WidgetStateProperty.all(
-          const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 60),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
