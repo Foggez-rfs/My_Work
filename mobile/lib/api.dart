@@ -145,6 +145,26 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  // === СТАТИСТИКА ===
+  
+  // Получить статистику пользователя
+  static Future<Map<String, dynamic>> getUserStats() async {
+    final headers = await _headers();
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/stats/user'),
+      headers: headers,
+    );
+    return _handleResponse(response);
+  }
+  
+  // Получить общую статистику платформы
+  static Future<Map<String, dynamic>> getPlatformStats() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/stats/platform'),
+    );
+    return _handleResponse(response);
+  }
+
   // === ОБРАБОТКА ОТВЕТОВ ===
 
   static Map<String, dynamic> _handleResponse(http.Response response) {

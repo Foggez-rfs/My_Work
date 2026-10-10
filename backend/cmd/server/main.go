@@ -11,6 +11,7 @@ import (
 	"github.com/moe-delo/moe-delo/internal/docs"
 	"github.com/moe-delo/moe-delo/internal/orders"
 	"github.com/moe-delo/moe-delo/internal/rating"
+	"github.com/moe-delo/moe-delo/internal/stats"
 	"github.com/moe-delo/moe-delo/internal/users"
 	"github.com/moe-delo/moe-delo/pkg/db"
 	"github.com/moe-delo/moe-delo/pkg/middleware"
@@ -78,6 +79,10 @@ func main() {
 	api.POST("/orders/:id/accept", orders.AcceptOrder)
 	api.POST("/orders/:id/complete", orders.CompleteOrder)
 	api.POST("/orders/:id/rate", rating.RateOrder)
+
+	// Статистика
+	api.GET("/stats/user", stats.GetUserStats)
+	r.GET("/api/stats/platform", stats.GetPlatformStats) // Публичный эндпоинт
 
 	// Документы
 	api.POST("/docs/upload", docs.UploadDocument)

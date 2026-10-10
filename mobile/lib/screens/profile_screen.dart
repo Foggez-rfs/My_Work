@@ -152,6 +152,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 8),
 
+            // Статистика и достижения
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.bar_chart, size: 28, color: Colors.blue),
+                title: const Text('📊 Статистика и достижения', style: TextStyle(fontSize: 18)),
+                subtitle: const Text('Ваши заказы, часы помощи, сертификаты'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () => Navigator.pushNamed(context, '/stats'),
+              ),
+            ),
+            const SizedBox(height: 8),
+
             // Доверенный контакт (SOS)
             Card(
               child: Padding(
