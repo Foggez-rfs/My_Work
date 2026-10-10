@@ -47,6 +47,7 @@ mobile/android/captures/
 mobile/android/gradlew
 mobile/android/gradlew.bat
 mobile/android/local.properties
+mobile/android/app/release/
 
 # iOS
 mobile/ios/**/*.mode1v3
