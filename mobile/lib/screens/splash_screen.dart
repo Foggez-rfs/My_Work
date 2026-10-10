@@ -44,18 +44,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  // Проверяем, есть ли сохранённый токен и URL сервера
+  // Проверяем, есть ли сохранённый токен
   Future<void> _checkAuth() async {
     await Future.delayed(const Duration(seconds: 2)); // Показываем splash
 
-    final serverUrl = await StorageService.getString('server_url');
-    if (serverUrl == null || serverUrl.isEmpty) {
-      // Нет URL — показываем экран настройки
-      if (mounted) Navigator.pushReplacementNamed(context, '/setup');
-      return;
-    }
-
-    // Инициализируем API
+    // Инициализируем API (URL уже захардкожен)
     await ApiService.init();
 
     final user = await StorageService.getUser();
