@@ -10,6 +10,7 @@ import 'screens/profile_screen.dart';
 import 'screens/new_order_screen.dart';
 import 'screens/my_orders_screen.dart';
 import 'screens/map_screen.dart';
+import 'screens/stats_screen.dart';
 import 'theme.dart';
 
 void main() {
@@ -63,6 +64,7 @@ class _MoeDeloAppState extends State<MoeDeloApp> {
         '/new_order': (context) => const NewOrderScreen(),
         '/my_orders': (context) => const MyOrdersScreen(),
         '/map': (context) => const MapScreen(),
+        '/stats': (context) => const StatsScreen(),
         '/profile': (context) => ProfileScreen(onToggleTheme: _toggleTheme),
       },
     );
