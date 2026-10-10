@@ -1,1 +1,126 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #1E3A8A;
+  --color-primary-light: #2563EB;
+  --color-danger: #DC2626;
+  --color-danger-light: #EF4444;
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.dark body {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Крупные кнопки для пожилых пользователей */
+.btn-large {
+  min-height: 60px;
+  min-width: 60px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 16px 24px;
+  transition: all 0.2s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-large:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: #1E3A8A;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2563EB;
+}
+
+.btn-danger {
+  background-color: #DC2626;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #EF4444;
+}
+
+.btn-success {
+  background-color: #16A34A;
+  color: white;
+  border: none;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid #1E3A8A;
+  color: #1E3A8A;
+}
+
+.dark .btn-outline {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
+/* Крупный шрифт для пожилых */
+.text-large {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+.text-xlarge {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Карточки */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.dark .card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite;
+}
