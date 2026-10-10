@@ -272,7 +272,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       'ИИ автоматически определяет категорию и срочность заказа.',
                       style: TextStyle(color: Colors.grey.shade700),
                     ),
+                    const SizedBox(height: 12),
+                    
+                    // Ссылки на юридические документы
+                    InkWell(
+                      onTap: () {
+                        // В реальном приложении здесь будет WebView или url_launcher
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('📄 Политика конфиденциальности: https://moe-delo.ru/privacy.html')),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.privacy_tip, size: 18, color: Colors.grey.shade600),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Политика конфиденциальности',
+                            style: TextStyle(color: Colors.blue.shade700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('📄 Условия использования: https://moe-delo.ru/terms.html')),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.description, size: 18, color: Colors.grey.shade600),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Условия использования',
+                            style: TextStyle(color: Colors.blue.shade700, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 12),
                     Text('Версия: 1.0.0', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
                   ],
                 ),

@@ -47,6 +47,12 @@ class _ExecutorScreenState extends State<ExecutorScreen> {
       appBar: AppBar(
         title: const Text('🤝 Заказы рядом'),
         actions: [
+          // Кнопка карты
+          IconButton(
+            icon: const Icon(Icons.map),
+            onPressed: () => Navigator.pushNamed(context, '/map'),
+            tooltip: 'Показать на карте',
+          ),
           // Кнопка озвучки
           IconButton(
             icon: const Icon(Icons.volume_up),
