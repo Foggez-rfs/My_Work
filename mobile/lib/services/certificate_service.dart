@@ -16,7 +16,7 @@ class CertificateService {
     
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.a4.landscape(),
+        pageFormat: PdfPageFormat.a4.landscape,
         build: (pw.Context context) {
           return pw.Container(
             decoration: pw.BoxDecoration(
