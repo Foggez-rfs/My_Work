@@ -1,6 +1,8 @@
 // Экран создания нового заказа
 import 'package:flutter/material.dart';
 import '../api.dart';
+import '../services/speech_service.dart';
+import '../services/tts_service.dart';
 
 class NewOrderScreen extends StatefulWidget {
   const NewOrderScreen({super.key});
@@ -16,6 +18,64 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
   int? _priority;
   bool _loading = false;
   bool _success = false;
+  bool _isListening = false;
+  String _speechText = '';
+
+  // Голосовой ввод: начать прослушивание
+  Future<void> _startListening() async {
+    final available = await SpeechService.isAvailable();
+    if (!available) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Голосовой ввод недоступен на этом устройстве')),
+        );
+      }
+      return;
+    }
+
+    setState(() => _isListening = true);
+
+    await SpeechService.startListening(
+      onResult: (text) {
+        setState(() {
+          _speechText = text;
+          _descController.text = text;
+        });
+        _classify();
+      },
+      onDone: () {
+        setState(() => _isListening = false);
+      },
+    );
+
+    // Автоматически останавливаем через 10 секунд
+    Future.delayed(const Duration(seconds: 10), () {
+      if (_isListening) {
+        SpeechService.stopListening();
+        setState(() => _isListening = false);
+      }
+    });
+  }
+
+  // Остановить прослушивание
+  Future<void> _stopListening() async {
+    await SpeechService.stopListening();
+    setState(() => _isListening = false);
+  }
+
+  @override
+  void dispose() {
+    _descController.dispose();
+    _addressController.dispose();
+    SpeechService.stopListening();
+    TtsService.stop();
+    super.dispose();
+  }
+
+  // Озвучить подсказку
+  void _speakHint() {
+    TtsService.speak('Опишите, что нужно сделать. Например: Прорвало кран на кухне, вода льётся.');
+  }
 
   // ИИ-классификация на клиенте (для мгновенной обратной связи)
   void _classify() {
@@ -118,17 +178,72 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Опишите, что нужно сделать', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _descController,
-              decoration: const InputDecoration(
-                hintText: 'Например: Прорвало кран на кухне, вода льётся',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 4,
-              onChanged: (_) => _classify(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Опишите, что нужно сделать', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                // Кнопка озвучки подсказки
+                IconButton(
+                  icon: const Icon(Icons.volume_up, size: 28),
+                  onPressed: _speakHint,
+                  tooltip: 'Прослушать подсказку',
+                ),
+              ],
             ),
+            const SizedBox(height: 8),
+            Stack(
+              children: [
+                TextField(
+                  controller: _descController,
+                  decoration: InputDecoration(
+                    hintText: 'Например: Прорвало кран на кухне, вода льётся',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: _isListening
+                        ? null
+                        : IconButton(
+                            icon: const Icon(Icons.mic, size: 32, color: Color(0xFF1E3A8A)),
+                            onPressed: _startListening,
+                            tooltip: 'Голосовой ввод',
+                          ),
+                  ),
+                  maxLines: 4,
+                  onChanged: (_) => _classify(),
+                ),
+                // Анимированная кнопка записи
+                if (_isListening)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: _listeningIndicator(),
+                  ),
+              ],
+            ),
+            if (_isListening)
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.mic, color: Colors.red),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _speechText.isEmpty ? 'Слушаю...' : 'Распознано: $_speechText',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _stopListening,
+                      child: const Text('Стоп', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 8),
             Text('Пишите простыми словами — система поймёт',
               style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
@@ -197,6 +312,25 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(labels[_priority] ?? '', style: TextStyle(fontSize: 14, color: colors[_priority])),
+    );
+  }
+
+  // Индикатор голосового ввода
+  Widget _listeningIndicator() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.5),
+            blurRadius: 12,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: const Icon(Icons.mic, color: Colors.white, size: 24),
     );
   }
 }

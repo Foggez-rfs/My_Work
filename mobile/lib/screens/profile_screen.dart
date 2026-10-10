@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../storage.dart';
 import '../api.dart';
+import '../services/tts_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback? onToggleTheme;
@@ -16,7 +17,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _phone = '';
   String _role = '';
   String _serverUrl = '';
+  String _emergencyPhone = '';
   final _urlController = TextEditingController();
+  final _emergencyController = TextEditingController();
 
   @override
   void initState() {
@@ -28,12 +31,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final name = await StorageService.getString('user_name') ?? '';
     final role = await StorageService.getString('role') ?? '';
     final url = await StorageService.getString('server_url') ?? '';
+    final emergencyPhone = await StorageService.getString('emergency_phone') ?? '';
     _urlController.text = url;
+    _emergencyController.text = emergencyPhone;
     setState(() {
       _name = name;
       _role = role;
       _serverUrl = url;
+      _emergencyPhone = emergencyPhone;
     });
+  }
+
+  // Сохранить доверенный контакт
+  Future<void> _saveEmergencyPhone() async {
+    final phone = _emergencyController.text.trim();
+    await StorageService.setString('emergency_phone', phone);
+    setState(() => _emergencyPhone = phone);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(phone.isEmpty 
+              ? 'Доверенный контакт удалён' 
+              : '✅ Доверенный контакт сохранён: $phone'),
+        ),
+      );
+    }
   }
 
   // Выход из аккаунта
@@ -125,6 +147,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 trailing: Switch(
                   value: Theme.of(context).brightness == Brightness.dark,
                   onChanged: (_) => widget.onToggleTheme?.call(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Доверенный контакт (SOS)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text('🆘 Доверенный контакт', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.volume_up, size: 22),
+                          onPressed: () {
+                            TtsService.speak('Введите телефон родственника. При нажатии кнопки SOS ему будет отправлено SMS и совершён звонок.');
+                          },
+                          tooltip: 'Прослушать подсказку',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'При нажатии SOS этому человеку отправится SMS с вашим местоположением',
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _emergencyController,
+                      decoration: const InputDecoration(
+                        hintText: '+7 (900) 123-45-67',
+                        prefixIcon: Icon(Icons.phone),
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _saveEmergencyPhone,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text(_emergencyPhone.isEmpty ? 'Сохранить контакт' : 'Обновить контакт'),
+                      ),
+                    ),
+                    if (_emergencyPhone.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                          const SizedBox(width: 8),
+                          Text('Сохранён: $_emergencyPhone', style: const TextStyle(color: Colors.green)),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),

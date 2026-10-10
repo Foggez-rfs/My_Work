@@ -1,6 +1,7 @@
 // Главный экран исполнителя — лента заказов рядом
 import 'package:flutter/material.dart';
 import '../api.dart';
+import '../services/tts_service.dart';
 
 class ExecutorScreen extends StatefulWidget {
   const ExecutorScreen({super.key});
@@ -46,6 +47,14 @@ class _ExecutorScreenState extends State<ExecutorScreen> {
       appBar: AppBar(
         title: const Text('🤝 Заказы рядом'),
         actions: [
+          // Кнопка озвучки
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            onPressed: () {
+              TtsService.speak('Заказы рядом с вами. Потяните вниз для обновления списка. Нажмите на заказ, чтобы взять его.');
+            },
+            tooltip: 'Прослушать',
+          ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () => Navigator.pushNamed(context, '/profile'),
@@ -119,6 +128,19 @@ class _ExecutorScreenState extends State<ExecutorScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(order['category'] ?? '', style: const TextStyle(fontSize: 16)),
+                // Кнопка озвучки заказа
+                IconButton(
+                  icon: const Icon(Icons.volume_up, size: 22),
+                  onPressed: () {
+                    final desc = order['description'] ?? '';
+                    final addr = order['address'] ?? '';
+                    final cat = order['category'] ?? '';
+                    TtsService.speak('$cat. $desc. Адрес: $addr.');
+                  },
+                  tooltip: 'Прослушать заказ',
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
