@@ -1,92 +1,53 @@
-# CI/CD: Автоматическая сборка APK «Моё дело»
-# При push в main — собирается APK и публикуется в GitHub Releases
-
 name: Build APK
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches: [main, master]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: 📥 Исходный код
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐦 Установка Java
-        uses: actions/setup-java@v5
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 📱 Установка Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
-          cache: true
 
-      - name: 📦 Зависимости Flutter
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
         working-directory: ./mobile
-        run: |
-          flutter pub get
-          flutter pub upgrade
+        run: flutter pub get
 
-      - name: 🔍 Анализ кода
-        working-directory: ./mobile
-        run: flutter analyze --no-fatal-infos || true
-
-      - name: 🏗 Сборка APK (release)
+      - name: Build APK
         working-directory: ./mobile
         run: flutter build apk --release
 
-      - name: 📤 Публикация APK в Releases
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create Release
         if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: mobile/build/app/outputs/flutter-apk/app-release.apk
           tag_name: v${{ github.run_number }}
-          name: "Моё дело v${{ github.run_number }}"
-          body: |
-            ## 🤝 Моё дело — APK сборка
-            
-            ### Установка:
-            1. Скачайте файл `app-release.apk` ниже
-            2. Разрешите установку из неизвестных источников
-            3. Откройте файл и установите
-            
-            ### Изменения:
-            - Автоматическая сборка #${{ github.run_number }}
-            - Коммит: ${{ github.sha }}
+          name: Release ${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Отдельная задача для проверки Go-бэкенда
-  backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Исходный код
-        uses: actions/checkout@v4
-
-      - name: 🐹 Установка Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-          cache: false  # ← Отключаем кэширование (оно ищет go.sum в корне)
-
-      - name: 📦 Зависимости Go
-        working-directory: ./backend
-        run: |
-          go mod tidy
-          go mod download
-
-      - name: 🔍 Проверка кода Go
-        working-directory: ./backend
-        run: go vet ./... || true
-
-      - name: 🏗 Сборка сервера
-        working-directory: ./backend
-        run: go build -o moe-delo-server ./cmd/server/
