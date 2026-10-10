@@ -9,7 +9,8 @@ class ApiService {
 
   // Инициализация URL из хранилища
   static Future<void> init() async {
-    _baseUrl = await StorageService.getString('server_url') ?? '';
+    // URL сервера захардкожен — пенсионеры не должны видеть настройки
+    _baseUrl = await StorageService.getString('server_url') ?? 'https://traverse-chevron-outspoken.ngrok-free.dev';
   }
 
   // Установка URL сервера

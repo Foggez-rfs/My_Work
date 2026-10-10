@@ -1,7 +1,6 @@
 // Экран профиля — настройки, смена темы, выход
 import 'package:flutter/material.dart';
 import '../storage.dart';
-import '../api.dart';
 import '../services/tts_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,9 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _name = '';
   String _phone = '';
   String _role = '';
-  String _serverUrl = '';
   String _emergencyPhone = '';
-  final _urlController = TextEditingController();
   final _emergencyController = TextEditingController();
 
   @override
@@ -30,14 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadProfile() async {
     final name = await StorageService.getString('user_name') ?? '';
     final role = await StorageService.getString('role') ?? '';
-    final url = await StorageService.getString('server_url') ?? '';
     final emergencyPhone = await StorageService.getString('emergency_phone') ?? '';
-    _urlController.text = url;
     _emergencyController.text = emergencyPhone;
     setState(() {
       _name = name;
       _role = role;
-      _serverUrl = url;
       _emergencyPhone = emergencyPhone;
     });
   }
@@ -79,20 +73,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await StorageService.delete('user_name');
       if (mounted) {
         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-      }
-    }
-  }
-
-  // Смена сервера
-  Future<void> _changeServer() async {
-    final newUrl = _urlController.text.trim();
-    if (newUrl.isNotEmpty) {
-      await ApiService.setBaseUrl(newUrl);
-      setState(() => _serverUrl = newUrl);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ Сервер изменён')),
-        );
       }
     }
   }
@@ -222,37 +202,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ],
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Смена сервера
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('🌐 Сервер', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _urlController,
-                      decoration: const InputDecoration(
-                        hintText: 'http://...',
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _changeServer,
-                        child: const Text('Сохранить'),
-                      ),
-                    ),
                   ],
                 ),
               ),

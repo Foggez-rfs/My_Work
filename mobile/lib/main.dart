@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'storage.dart';
 import 'screens/splash_screen.dart';
-import 'screens/setup_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/customer_screen.dart';
 import 'screens/executor_screen.dart';
@@ -57,7 +56,6 @@ class _MoeDeloAppState extends State<MoeDeloApp> {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => const SplashScreen(),
-        '/setup': (context) => const SetupScreen(),
         '/login': (context) => const LoginScreen(),
         '/customer': (context) => const CustomerScreen(),
         '/executor': (context) => const ExecutorScreen(),
