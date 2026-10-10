@@ -1,0 +1,55 @@
+# CI/CD: Сборка Go-бэкенда «Моё дело»
+# Упрощённая версия — только бэкенд (Flutter собираем локально)
+
+name: Build Backend
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    name: 🏗 Сборка Go-бэкенда
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Исходный код
+        uses: actions/checkout@v4
+
+      - name: 🐹 Установка Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: 📦 Зависимости
+        working-directory: ./backend
+        run: |
+          go mod tidy
+          go mod download
+
+      - name: 🔍 Проверка кода
+        working-directory: ./backend
+        run: go vet ./...
+
+      - name: 🏗 Сборка сервера
+        working-directory: ./backend
+        run: go build -o moe-delo-server ./cmd/server/
+
+      - name: 🏗 Сборка утилит
+        working-directory: ./backend
+        run: |
+          go build -o seed ./cmd/seed/
+          go build -o admin ./cmd/admin/
+          go build -o health ./cmd/health/
+
+      - name: 📤 Сохранение артефактов
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-binaries
+          path: |
+            backend/moe-delo-server
+            backend/seed
+            backend/admin
+            backend/health
+          retention-days: 30
