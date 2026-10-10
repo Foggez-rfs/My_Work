@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐦 Установка Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -31,7 +31,9 @@ jobs:
 
       - name: 📦 Зависимости Flutter
         working-directory: ./mobile
-        run: flutter pub get
+        run: |
+          flutter pub get
+          flutter pub upgrade
 
       - name: 🔍 Анализ кода
         working-directory: ./mobile
@@ -76,7 +78,9 @@ jobs:
 
       - name: 📦 Зависимости Go
         working-directory: ./backend
-        run: go mod download
+        run: |
+          go mod tidy
+          go mod download
 
       - name: 🔍 Проверка кода Go
         working-directory: ./backend
