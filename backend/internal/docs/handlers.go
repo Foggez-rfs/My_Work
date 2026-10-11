@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/moe-delo/moe-delo/pkg/db"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/db"
 )
 
 // UploadDocument — загрузка документа (паспорт, СНИЛС, согласие родителя)

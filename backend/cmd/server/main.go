@@ -7,14 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/moe-delo/moe-delo/internal/auth"
-	"github.com/moe-delo/moe-delo/internal/docs"
-	"github.com/moe-delo/moe-delo/internal/orders"
-	"github.com/moe-delo/moe-delo/internal/rating"
-	"github.com/moe-delo/moe-delo/internal/stats"
-	"github.com/moe-delo/moe-delo/internal/users"
-	"github.com/moe-delo/moe-delo/pkg/db"
-	"github.com/moe-delo/moe-delo/pkg/middleware"
+	"github.com/Foggez-rfs/My_Work/backend/internal/auth"
+	"github.com/Foggez-rfs/My_Work/backend/internal/docs"
+	"github.com/Foggez-rfs/My_Work/backend/internal/orders"
+	"github.com/Foggez-rfs/My_Work/backend/internal/rating"
+	"github.com/Foggez-rfs/My_Work/backend/internal/stats"
+	"github.com/Foggez-rfs/My_Work/backend/internal/users"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/db"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/middleware"
 )
 
 func main() {

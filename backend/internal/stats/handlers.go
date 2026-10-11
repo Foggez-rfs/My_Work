@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/moe-delo/moe-delo/internal/orders"
-	"github.com/moe-delo/moe-delo/internal/users"
-	"github.com/moe-delo/moe-delo/pkg/db"
+	"github.com/Foggez-rfs/My_Work/backend/internal/orders"
+	"github.com/Foggez-rfs/My_Work/backend/internal/users"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/db"
 )
 
 // GetUserStats — статистика текущего пользователя

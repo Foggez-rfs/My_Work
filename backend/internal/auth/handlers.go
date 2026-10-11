@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/moe-delo/moe-delo/internal/users"
-	"github.com/moe-delo/moe-delo/pkg/db"
-	"github.com/moe-delo/moe-delo/pkg/middleware"
+	"github.com/Foggez-rfs/My_Work/backend/internal/users"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/db"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/middleware"
 	"golang.org/x/crypto/bcrypt"
 )
 

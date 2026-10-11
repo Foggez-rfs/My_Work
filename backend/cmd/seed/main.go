@@ -5,10 +5,10 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"github.com/moe-delo/moe-delo/internal/orders"
-	"github.com/moe-delo/moe-delo/internal/rating"
-	"github.com/moe-delo/moe-delo/internal/users"
-	"github.com/moe-delo/moe-delo/pkg/db"
+	"github.com/Foggez-rfs/My_Work/backend/internal/orders"
+	"github.com/Foggez-rfs/My_Work/backend/internal/rating"
+	"github.com/Foggez-rfs/My_Work/backend/internal/users"
+	"github.com/Foggez-rfs/My_Work/backend/pkg/db"
 	"golang.org/x/crypto/bcrypt"
 )
 
